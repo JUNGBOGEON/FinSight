@@ -20,7 +20,7 @@ FinSight 는 복잡한 금융 데이터를 분석하고 직관적인 정보를 �
 
 ```bash
 # 프로젝트 클론
-git clone https://github.com/JEONGBOGEON/finsight.git
+git clone https://github.com/JUNGBOGEON/FinSight.git
 ```
 
 ### 프론트엔드(frontend) 시작하기
