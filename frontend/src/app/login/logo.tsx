@@ -15,6 +15,7 @@ export default function Logo() {
           height={80} 
           className="h-auto w-auto relative z-10"
           priority
+          unoptimized
         />
       </div>
       <span className="sr-only">FinSight</span>

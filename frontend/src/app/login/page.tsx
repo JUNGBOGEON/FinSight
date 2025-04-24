@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import styles from './login.module.css';
 import Logo from './logo';
 import { useAuth } from '../contexts/AuthContext';
@@ -17,14 +17,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "next-themes"
-import { Sun, Moon, Loader2 } from 'lucide-react';
+import { Sun, Moon } from 'lucide-react';
+import LogoImage from '../../../public/logo.png';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const router = useRouter();
-  const { login, user, isLoading } = useAuth();
+  const { user } = useAuth();
   const { setTheme } = useTheme();
 
   useEffect(() => {
@@ -33,28 +31,8 @@ export default function LoginPage() {
     }
   }, [user, router]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!email || !password) {
-      setError('이메일과 비밀번호를 모두 입력해주세요.');
-      return;
-    }
-    
-    setError('');
-    
-    try {
-      const success = await login(email, password);
-      
-      if (success) {
-        router.push('/dashboard');
-      } else {
-        setError('로그인에 실패했습니다. 다시 시도해주세요.');
-      }
-    } catch (err) {
-      setError('로그인에 실패했습니다. 다시 시도해주세요.');
-      console.error(err);
-    }
+  const handleGoogleLogin = () => {
+    console.log('Google login clicked');
   };
 
   return (
@@ -88,94 +66,41 @@ export default function LoginPage() {
       <div className="w-full max-w-md space-y-8">
         <div className={`p-8 rounded-xl ${styles.formContainer}`}>
           <div className="mb-8">
-            <Logo />
+            <div className={styles.logo}>
+              <div className="relative flex items-center justify-center">
+                <div className="absolute w-20 h-20 rounded-full bg-blue-100 blur-md opacity-70"></div>
+                <Image 
+                  src={LogoImage} 
+                  alt="FinSight Logo" 
+                  width={80} 
+                  height={80} 
+                  className="h-auto w-auto relative z-10"
+                  priority
+                />
+              </div>
+              <span className="sr-only">FinSight</span>
+            </div>
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-              FinSight 계정으로 로그인
+              FinSight에 로그인하기
             </h2>
-            <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-300">
-              아직 계정이 없으신가요?{' '}
-              <Link 
-                href="/signup" 
-                className={`font-medium text-blue-600 hover:text-blue-500 dark:text-sky-400 dark:hover:text-sky-300 ${styles.bounce}`}
-              >
-                회원가입
-              </Link>
-            </p>
           </div>
           
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">이메일</label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className={`block w-full rounded-md px-4 py-3 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 border-0 bg-white/50 dark:bg-transparent backdrop-blur-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-sky-400 focus:outline-none ${styles.input}`}
-                  placeholder="이메일을 입력하세요"
-                />
-              </div>
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">비밀번호</label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={`block w-full rounded-md px-4 py-3 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 border-0 bg-white/50 dark:bg-transparent backdrop-blur-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-sky-400 focus:outline-none ${styles.input}`}
-                  placeholder="비밀번호를 입력하세요"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600 dark:border-gray-600 dark:bg-gray-700 dark:checked:bg-sky-500 dark:focus:ring-sky-500"
-                />
-                <Label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
-                  로그인 상태 유지
-                </Label>
-              </div>
-
-              <div className="text-sm">
-                <Link href="/forgot-password" className={`font-medium text-blue-600 hover:text-blue-500 dark:text-sky-400 dark:hover:text-sky-300 ${styles.bounce}`}>
-                  비밀번호 찾기
-                </Link>
-              </div>
-            </div>
-
-            {error && (
-              <div className="text-red-500 dark:text-red-400 text-sm text-center bg-red-50 dark:bg-red-950/30 p-2 rounded-md border border-red-100 dark:border-red-900/50">{error}</div>
-            )}
-
-            <div>
-              {isLoading ? (
-                <Button disabled className="relative group w-full rounded-md px-3 py-3 text-sm font-semibold text-white dark:text-white bg-blue-600 dark:bg-sky-600" variant="default">
-                  <Loader2 className="animate-spin mr-2" />
-                  로그인 중...
-                </Button>
-              ) : (
-                <Button
-                  type="submit"
-                  className="relative group w-full rounded-md px-3 py-3 text-sm font-semibold text-white dark:text-white bg-blue-600 dark:bg-sky-600 hover:bg-blue-500 dark:hover:bg-sky-500"
-                  variant="default"
-                >
-                  로그인
-                </Button>
-              )}
-            </div>
-          </form>
+          <div className="mt-8 space-y-6">
+            <Button
+              onClick={handleGoogleLogin}
+              className="w-full h-12 px-4 py-2 flex items-center justify-center space-x-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              variant="outline"
+            >
+              <Image 
+                src="/google.png" 
+                alt="Google logo" 
+                width={24} 
+                height={24} 
+                className="mr-2"
+              />
+              <span className="font-medium">구글 계정으로 로그인</span>
+            </Button>
+          </div>
         </div>
       </div>
     </div>
