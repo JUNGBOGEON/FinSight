@@ -9,11 +9,11 @@ FinSight 는 복잡한 금융 데이터를 분석하고 직관적인 정보를 �
 누구나 쉽게 금융 정보를 이해하고 데이터와 소통 할 수 있도록 도와줍니다.
 
 ## 사용된 기술 스택
-- **프레임워크**: nextjs + react
+- **프론트엔드 프레임워크**: nextjs + react
+- **백엔드 프레임워크**: nestjs + postgreSQL
 - **언어**: typeScript
 - **스타일링**: tailwindcss
 - **UI 컴포넌트**: shadcn/ui
-
 
 
 ## 프로젝트 시작하기
